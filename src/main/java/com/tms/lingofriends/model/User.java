@@ -1,9 +1,9 @@
 package com.tms.lingofriends.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -12,10 +12,13 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Entity
 @Table(name = "user_table")
+@ToString(exclude = {"subscription"})
+@EqualsAndHashCode(exclude = {"subscription"})
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq_gen")
-    @SequenceGenerator(name = "user_id_seq_gen", sequenceName = "user_table_is_seq", allocationSize = 1)
+    @SequenceGenerator(name = "user_id_seq_gen", sequenceName = "user_table_id_seq", allocationSize = 1)
     private Integer id;
     @Column(name = "first_name")
     private String firstName;
@@ -25,7 +28,7 @@ public class User {
     private String login;
     @Column(name = "password")
     private String password;
-   // @Enumerated(EnumType.ORDINAL)
+    // @Enumerated(EnumType.ORDINAL)
     private String role;
     @Column(name = "email")
     private String email;
@@ -41,5 +44,10 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp changed;
     @Column(name = "is_deleted")
-    private boolean idDeleted;
+    private boolean isDeleted;
+   @JsonManagedReference
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "subscription_id", referencedColumnName = "id")
+    private Subscription subscription;
+
 }
