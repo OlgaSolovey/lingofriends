@@ -1,19 +1,22 @@
 package com.tms.lingofriends.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "user_table")
-@ToString(exclude = {"subscription"})
-@EqualsAndHashCode(exclude = {"subscription"})
+@ToString(exclude = {"subscription", "educationProductsList"})
+@EqualsAndHashCode(exclude = {"subscription", "educationProductsList"})
 
 public class User {
     @Id
@@ -45,9 +48,15 @@ public class User {
     private Timestamp changed;
     @Column(name = "is_deleted")
     private boolean isDeleted;
-   @JsonManagedReference
+    @JsonManagedReference
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "subscription_id", referencedColumnName = "id")
     private Subscription subscription;
-
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<EducationProduct> educationProductsList = new HashSet<>();
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "language_id", nullable = false)
+    private Language language;
 }

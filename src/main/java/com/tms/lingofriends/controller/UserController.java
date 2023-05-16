@@ -44,8 +44,9 @@ public class UserController {
     public ResponseEntity<User> findUserByLastName(@PathVariable String ln) {
         Optional<User> user = userService.findUserByLastName(ln);
         if (user.isPresent()) {
-            return new ResponseEntity<>(user.get(),HttpStatus.OK);
-        } return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
     @PostMapping

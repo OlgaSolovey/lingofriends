@@ -12,7 +12,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/language")
@@ -65,7 +64,7 @@ public class LanguageController {
         languageService.updateLanguage(language);
     }
 
-   @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteLanguage(@PathVariable int id) {
         languageService.deleteLanguage(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

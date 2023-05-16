@@ -66,7 +66,6 @@ public class EducationProductService {
         EducationProduct educationProductFromDb = educationProductRepository.save(educationProduct);
         educationProductFromDb.setPreviewImageId(educationProductFromDb.getImages().get(0).getId());
         return educationProductRepository.save(educationProduct);
-        // return educationProductRepository.save(educationProduct);
     }
 
     private Image toImageEntity(MultipartFile file1) throws IOException {
@@ -77,9 +76,7 @@ public class EducationProductService {
         image.setSize(file1.getSize());
         image.setBytes(file1.getBytes());
         return image;
-
     }
-
 
     public EducationProduct updateEducationProduct(EducationProduct educationProduct) {
         return educationProductRepository.saveAndFlush(educationProduct);

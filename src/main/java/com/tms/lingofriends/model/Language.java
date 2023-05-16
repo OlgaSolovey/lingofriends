@@ -1,9 +1,11 @@
 package com.tms.lingofriends.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Data
@@ -11,6 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "language_table")
+@ToString(exclude = { "educationProductsList","userList"})
+@EqualsAndHashCode(exclude = {"educationProductsList","userList"})
 public class Language {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "language_id_seq_gen")
@@ -18,10 +22,12 @@ public class Language {
     private Integer id;
     @Column(name = "language_name")
     private String languageName;
-    @Column(name = "user_id")
-    private int userId;
-    @Column(name = "education_product_id")
-    private int educationProductId;
     @Column(name = "is_deleted")
     private boolean isDeleted;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "language", fetch = FetchType.EAGER)
+    private Set<User> userList = new HashSet<>();
+    @JsonManagedReference
+    @OneToMany(mappedBy = "language", fetch = FetchType.EAGER)
+    private Set<EducationProduct> educationProductsList = new HashSet<>();
 }

@@ -1,15 +1,16 @@
 package com.tms.lingofriends.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "images_table")
+@ToString(exclude = {"educationProduct"})
+@EqualsAndHashCode(exclude = {"educationProduct"})
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "images_id_seq_gen")
@@ -25,10 +26,12 @@ public class Image {
     private String contentType;
     @Column(name = "is_preview_image")
     private boolean isPreviewImage;
+
+
     @Lob
     private byte[] bytes;
-    @ManyToOne(cascade =  CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonBackReference
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "education_product_id", referencedColumnName = "id")
     private EducationProduct educationProduct;
-
-
 }

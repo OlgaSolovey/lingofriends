@@ -26,11 +26,11 @@ public class LanguageService {
         return languageRepository.findById(id).orElse(new Language());
     }
 
-  //  public Optional<Language> findUserByLastName(String ln) {
-   //     return userRepository.findUserByLastName(ln);
-  //  }
+    //  public Optional<Language> findUserByLastName(String ln) {
+    //     return userRepository.findUserByLastName(ln);
+    //  }
 
-    public Language createLanguage(Language language ) {
+    public Language createLanguage(Language language) {
         return languageRepository.save(language);
     }
 
@@ -39,7 +39,7 @@ public class LanguageService {
         return languageRepository.saveAndFlush(language);
     }
 
-   @Transactional
+    @Transactional
     public void deleteLanguage(int id) {
         languageRepository.deleteLanguage(id);
     }

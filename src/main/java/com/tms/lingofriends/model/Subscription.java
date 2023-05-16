@@ -23,7 +23,7 @@ public class Subscription {
     @Column(name = "expire_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp expireDate;
-   @JsonBackReference
+    @JsonBackReference
     @OneToOne(mappedBy = "subscription")
     private User user;
 }

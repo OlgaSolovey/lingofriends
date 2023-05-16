@@ -47,14 +47,14 @@ public class EducationProductController {
                                                              @RequestParam("file3") MultipartFile file3,
                                                              @RequestParam("file4") MultipartFile file4,
                                                              @RequestParam("file5") MultipartFile file5,
-                                                             @RequestBody EducationProduct educationProduct, BindingResult bindingResult) throws IOException{
+                                                             @RequestBody EducationProduct educationProduct, BindingResult bindingResult) throws IOException {
         if (bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
 
                 log.warn("We have bindingResult error : " + o);
             }
         }
-        educationProductService.createEducationProduct(educationProduct, file1,file2, file3, file4,file5);
+        educationProductService.createEducationProduct(educationProduct, file1, file2, file3, file4, file5);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -63,7 +63,7 @@ public class EducationProductController {
         educationProductService.updateEducationProduct(educationProduct);
     }
 
-  @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteEducationProduct(@PathVariable int id) {
         educationProductService.deleteEducationProduct(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
