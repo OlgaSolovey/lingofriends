@@ -3,6 +3,7 @@ package com.tms.lingofriends.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 @Data
 @NoArgsConstructor

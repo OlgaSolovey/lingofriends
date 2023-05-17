@@ -40,9 +40,9 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/ln/{ln}")
-    public ResponseEntity<User> findUserByLastName(@PathVariable String ln) {
-        Optional<User> user = userService.findUserByLastName(ln);
+    @GetMapping("/ln/{languageId}")
+    public ResponseEntity<ArrayList<User>> findUserByLanguageId(@PathVariable String languageId) {
+        Optional<ArrayList<User>> user = userService.findUserByLanguageId(languageId);
         if (user.isPresent()) {
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
         }

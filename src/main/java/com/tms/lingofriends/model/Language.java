@@ -25,9 +25,9 @@ public class Language {
     @Column(name = "is_deleted")
     private boolean isDeleted;
     @JsonManagedReference
-    @OneToMany(mappedBy = "language", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "language", fetch = FetchType.LAZY)
     private Set<User> userList = new HashSet<>();
-    @JsonManagedReference
-    @OneToMany(mappedBy = "language", fetch = FetchType.EAGER)
+   @JsonManagedReference
+    @OneToMany(mappedBy = "language", fetch = FetchType.LAZY)
     private Set<EducationProduct> educationProductsList = new HashSet<>();
 }

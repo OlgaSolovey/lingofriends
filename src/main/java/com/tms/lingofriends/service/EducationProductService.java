@@ -2,6 +2,7 @@ package com.tms.lingofriends.service;
 
 import com.tms.lingofriends.model.EducationProduct;
 import com.tms.lingofriends.model.Image;
+import com.tms.lingofriends.model.User;
 import com.tms.lingofriends.repository.EducationProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -28,6 +30,12 @@ public class EducationProductService {
 
     public EducationProduct getEducationProductById(int id) {
         return educationProductRepository.findById(id).orElse(new EducationProduct());
+    }
+    public Optional<ArrayList<EducationProduct>> findEducationProductByLanguageId(String languageId) {
+        return (Optional<ArrayList<EducationProduct>>) educationProductRepository.findEducationProductByLanguageId(languageId);
+    }
+    public Optional<ArrayList<EducationProduct>> findEducationProductByUserId(String userId) {
+        return (Optional<ArrayList<EducationProduct>>) educationProductRepository.findEducationProductByUserId(userId);
     }
 
     public EducationProduct createEducationProduct(EducationProduct educationProduct, MultipartFile file1,
@@ -62,7 +70,7 @@ public class EducationProductService {
         }
 
 
-        log.info("Saving new Education Product. Education name:{}", educationProduct.getEdProductName());
+        log.info("Saving new Education Product. EdProductName:{}", educationProduct.getEdProductName());
         EducationProduct educationProductFromDb = educationProductRepository.save(educationProduct);
         educationProductFromDb.setPreviewImageId(educationProductFromDb.getImages().get(0).getId());
         return educationProductRepository.save(educationProduct);

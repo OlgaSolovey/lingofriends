@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/education")
@@ -41,7 +42,24 @@ public class EducationProductController {
         return new ResponseEntity<>(educationProduct, HttpStatus.OK);
     }
 
-    @PostMapping
+    @GetMapping("/ln/{languageId}")
+    public ResponseEntity<ArrayList<EducationProduct>> findEducationProductByLanguageId(@PathVariable String languageId) {
+        Optional<ArrayList<EducationProduct>> educationProducts = educationProductService.findEducationProductByLanguageId(languageId);
+        if (educationProducts.isPresent()) {
+            return new ResponseEntity<>(educationProducts.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
+    @GetMapping("/us/{userId}")
+    public ResponseEntity<ArrayList<EducationProduct>> findEducationProductByUserId(@PathVariable String userId) {
+        Optional<ArrayList<EducationProduct>> educationProducts = educationProductService.findEducationProductByUserId(userId);
+        if (educationProducts.isPresent()) {
+            return new ResponseEntity<>(educationProducts.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
+
+    @PostMapping("/create")
     public ResponseEntity<HttpStatus> createEducationProduct(@RequestParam("file1") MultipartFile file1,
                                                              @RequestParam("file2") MultipartFile file2,
                                                              @RequestParam("file3") MultipartFile file3,

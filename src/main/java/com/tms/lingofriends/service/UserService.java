@@ -27,8 +27,8 @@ public class UserService {
         return userRepository.findById(id).orElse(new User());
     }
 
-    public Optional<User> findUserByLastName(String ln) {
-        return userRepository.findUserByLastName(ln);
+    public Optional<ArrayList<User>> findUserByLanguageId(String languageId) {
+        return (Optional<ArrayList<User>>) userRepository.findUserByLanguageId(languageId);
     }
 
     public User createUser(User user) {
