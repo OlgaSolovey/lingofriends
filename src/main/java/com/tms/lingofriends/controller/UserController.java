@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -40,13 +41,11 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/ln/{languageId}")
-    public ResponseEntity<ArrayList<User>> findUserByLanguageId(@PathVariable String languageId) {
-        Optional<ArrayList<User>> user = userService.findUserByLanguageId(languageId);
-        if (user.isPresent()) {
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    @GetMapping("/name/{name}")
+    public ResponseEntity<User> findUserByUserName(@PathVariable String name) {
+        Optional<User> user = userService.findUserByUserName(name);
+        return user.map(value -> new ResponseEntity<>(value, HttpStatus.NOT_FOUND)).orElseGet(() -> new ResponseEntity<>(HttpStatus.CONFLICT));
+
     }
 
     @PostMapping
@@ -61,14 +60,20 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public void updateUser(@RequestBody User user) {
         userService.updateUser(user);
     }
 
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable int id) {
-        userService.deleteUser(id);
+    public ResponseEntity<HttpStatus> deleteUserById(@PathVariable int id) {
+        userService.deleteUserById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+  /*  @PostMapping("/coursetouser")
+    public ResponseEntity<HttpStatus> addCourseToUser(@RequestParam int userId, @RequestParam int courseId) {
+        userService.addCourseToUser(userId, courseId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }*/
 }

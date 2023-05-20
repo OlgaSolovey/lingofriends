@@ -23,6 +23,10 @@ public class Subscription {
     @Column(name = "expire_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp expireDate;
+    @Column(name = "status")
+    private boolean status;
+
+
     @JsonBackReference
     @OneToOne(mappedBy = "subscription")
     private User user;

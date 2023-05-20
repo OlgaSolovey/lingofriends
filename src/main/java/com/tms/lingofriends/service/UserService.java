@@ -2,11 +2,10 @@ package com.tms.lingofriends.service;
 
 import com.tms.lingofriends.model.User;
 import com.tms.lingofriends.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -27,8 +26,8 @@ public class UserService {
         return userRepository.findById(id).orElse(new User());
     }
 
-    public Optional<ArrayList<User>> findUserByLanguageId(String languageId) {
-        return (Optional<ArrayList<User>>) userRepository.findUserByLanguageId(languageId);
+    public Optional<User> findUserByUserName(String name) {
+        return userRepository.findUserByUserName(name);
     }
 
     public User createUser(User user) {
@@ -36,12 +35,16 @@ public class UserService {
     }
 
     public User updateUser(User user) {
-        user.setCreated(new Timestamp(System.currentTimeMillis()));
         return userRepository.saveAndFlush(user);
     }
 
     @Transactional
-    public void deleteUser(int id) {
-        userRepository.deleteUser(id);
+    public void deleteUserById(int id) {
+        userRepository.deleteUserById(id);
     }
+  /* @Transactional
+   public void addCourseToUser(int userId, int courseId) {
+
+       userRepository.addCourseToUser(userId, courseId);
+   }*/
 }
