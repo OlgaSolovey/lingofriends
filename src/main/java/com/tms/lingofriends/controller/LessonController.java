@@ -1,6 +1,9 @@
 package com.tms.lingofriends.controller;
 
+import com.tms.lingofriends.model.Course;
 import com.tms.lingofriends.model.Lesson;
+import com.tms.lingofriends.model.response.CourseResponse;
+import com.tms.lingofriends.model.response.LessonResponse;
 import com.tms.lingofriends.service.LessonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +15,8 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/lesson")
@@ -25,10 +29,18 @@ public class LessonController {
         this.lessonService = lessonService;
     }
 
+    // admin  all lesson
     @GetMapping
-    public ResponseEntity<ArrayList<Lesson>> getAllLesson() {
-        ArrayList<Lesson> list = lessonService.getAllLesson();
-        return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    public ResponseEntity<List<Lesson>> getAllLesson() {
+        List<Lesson> lessonList = lessonService.getAllLesson();
+        return new ResponseEntity<>(lessonList, (!lessonList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    }
+
+    // user  all lesson
+    @GetMapping("/res")
+    public ResponseEntity<List<LessonResponse>> getAllLessonResponse() {
+        List<LessonResponse> lessonsList = lessonService.getAllLessonResponse();
+        return new ResponseEntity<>(lessonsList, (!lessonsList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/{id}")
@@ -40,18 +52,23 @@ public class LessonController {
         return new ResponseEntity<>(lesson, HttpStatus.OK);
     }
 
-    @GetMapping("/title/{title}")
-    public ResponseEntity<Lesson> findLessonByTitle(@PathVariable String title) {
-        Optional<Lesson> lesson = lessonService.findLessonByTitle(title);
-        return lesson.map(value -> new ResponseEntity<>(value, HttpStatus.NOT_FOUND)).orElseGet(() -> new ResponseEntity<>(HttpStatus.CONFLICT));
-
+    @GetMapping("/res/{id}")
+    public ResponseEntity<LessonResponse> getLessonResponseById(@PathVariable int id) {
+        return new ResponseEntity<>(lessonService.getLessonResponseById(id), HttpStatus.OK);
     }
 
     @GetMapping("/cr/{courseId}")
-    public ResponseEntity<ArrayList<Lesson>> findLessonByCourseId(@PathVariable Integer courseId) {
-        Optional<ArrayList<Lesson>> lesson = lessonService.findLessonByCourseId(courseId);
-        return lesson.map(value -> new ResponseEntity<>(value, HttpStatus.NOT_FOUND)).orElseGet(() -> new ResponseEntity<>(HttpStatus.CONFLICT));
+    public ResponseEntity<List<Lesson>> findLessonByCourseId(@PathVariable Integer courseId) {
 
+        List<Lesson> list = lessonService.findLessonByCourseId(courseId);
+        return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    }
+
+    // for user by course id
+    @GetMapping("/res/cr/{courseId}")
+    public ResponseEntity<List<LessonResponse>> findLessonResponseByCourseId(@PathVariable Integer courseId) {
+        List<LessonResponse> list = lessonService.findLessonResponseByCourseId(courseId);
+        return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
     @PostMapping

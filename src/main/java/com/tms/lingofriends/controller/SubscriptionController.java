@@ -2,8 +2,6 @@ package com.tms.lingofriends.controller;
 
 import com.tms.lingofriends.model.Subscription;
 import com.tms.lingofriends.service.SubscriptionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,19 +12,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/subscription")
 public class SubscriptionController {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final SubscriptionService subscriptionService;
 
     @Autowired
     public SubscriptionController(SubscriptionService subscriptionService) {
         this.subscriptionService = subscriptionService;
     }
-
-   /* @GetMapping
-    public ResponseEntity<ArrayList<User>> getAllUser() {
-        ArrayList<User> list = userService.getAllUsers();
-        return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
-    }*/
 
     @GetMapping("/{id}")
     public ResponseEntity<Subscription> getSubscriptionById(@PathVariable int id) {
@@ -41,8 +32,6 @@ public class SubscriptionController {
     public ResponseEntity<HttpStatus> createSubscription(@RequestBody Subscription subscription, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
-
-                log.warn("We have bindingResult error : " + o);
             }
         }
         subscriptionService.createSubscription(subscription);
@@ -54,9 +43,9 @@ public class SubscriptionController {
         subscriptionService.updateCourse(subscription);
     }
 
-  /*  @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable int id) {
-        userService.deleteUser(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteSubscriptionById(@PathVariable int id) {
+        subscriptionService.deleteSubscriptionById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }*/
+    }
 }

@@ -2,6 +2,7 @@ package com.tms.lingofriends.controller;
 
 import com.tms.lingofriends.model.Course;
 
+import com.tms.lingofriends.model.response.CourseResponse;
 import com.tms.lingofriends.service.CourseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/course")
@@ -26,12 +26,21 @@ public class CourseController {
         this.courseService = courseService;
     }
 
+    // for admin  all course
     @GetMapping
-    public ResponseEntity<ArrayList<Course>> getAllCourse() {
-        ArrayList<Course> list = courseService.getAllCourse();
-        return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    public ResponseEntity<List<Course>> getAllCourse() {
+        List<Course> courseList = courseService.getAllCourse();
+        return new ResponseEntity<>(courseList, (!courseList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
+    // for user  all course
+    @GetMapping("/res")
+    public ResponseEntity<List<CourseResponse>> getAllCoursesResponse() {
+        List<CourseResponse> coursesList = courseService.getAllCoursesResponse();
+        return new ResponseEntity<>(coursesList, (!coursesList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    }
+
+    // for admin course by id
     @GetMapping("/{id}")
     public ResponseEntity<Course> getCourseById(@PathVariable int id) {
         Course course = courseService.getCourseById(id);
@@ -41,29 +50,31 @@ public class CourseController {
         return new ResponseEntity<>(course, HttpStatus.OK);
     }
 
-    @GetMapping("/title/{title}")
-    public ResponseEntity<Course> findCourseByTitle(@PathVariable String title) {
-        Optional<Course> course = courseService.findCourseByTitle(title);
-        return course.map(value -> new ResponseEntity<>(value, HttpStatus.NOT_FOUND)).orElseGet(() -> new ResponseEntity<>(HttpStatus.CONFLICT));
-
+    // for user course by id
+    @GetMapping("/res/{id}")
+    public ResponseEntity<CourseResponse> getCourseResponseById(@PathVariable int id) {
+        return new ResponseEntity<>(courseService.getCourseResponseById(id), HttpStatus.OK);
     }
 
-    @GetMapping("/ln/{languageName}")
-    public ResponseEntity<ArrayList<Course>> findCourseByLanguageName(@PathVariable String languageName) {
-        Optional<ArrayList<Course>> courses = courseService.findCourseByLanguageName(languageName);
-        if (courses.isPresent()) {
-            return new ResponseEntity<>(courses.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    // for admin by language
+    @GetMapping("/res/ln/{languageName}")
+    public ResponseEntity<List<CourseResponse>> findCourseResponseByLanguageName(@PathVariable String languageName) {
+        List<CourseResponse> list = courseService.findCourseResponseByLanguageName(languageName);
+        return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
-
+    // for admin by user id
     @GetMapping("/us/{userId}")
-    public ResponseEntity<ArrayList<Course>> findCourseByUserId(@PathVariable Integer userId) {
-        Optional<ArrayList<Course>> courses = courseService.findCourseByUserId(userId);
-        if (courses.isPresent()) {
-            return new ResponseEntity<>(courses.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    public ResponseEntity<List<Course>> findCourseByUserId(@PathVariable Integer userId) {
+
+        List<Course> list = courseService.findCourseByUserId(userId);
+        return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    }
+
+    // for user by user id
+    @GetMapping("/res/us/{userId}")
+    public ResponseEntity<List<CourseResponse>> findCourseResponseByUserId(@PathVariable Integer userId) {
+        List<CourseResponse> list = courseService.findCourseResponseByUserId(userId);
+        return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
     @PostMapping

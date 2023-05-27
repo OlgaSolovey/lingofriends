@@ -7,16 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Integer> {
-    Optional<Course> findCourseByTitle(String title);
+    List<Course> findCourseByLanguageName(String languageName);
 
-    Optional<ArrayList<Course>> findCourseByLanguageName(String languageName);
-
-    Optional<ArrayList<Course>> findCourseByUserId(Integer userId);
+    List<Course> findCourseByUserId(Integer userId);
 
     @Transactional
     @Modifying
