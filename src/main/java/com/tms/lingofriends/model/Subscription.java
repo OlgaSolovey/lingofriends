@@ -1,9 +1,18 @@
 package com.tms.lingofriends.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.SequenceGenerator;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -19,8 +28,8 @@ public class Subscription {
     @Column(name = "user_id")
     private int userId;
     @Column(name = "expire_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp expireDate;
+
+    private LocalDate expireDate;
     @Column(name = "status")
-    private boolean status;
+    private Boolean status;
 }

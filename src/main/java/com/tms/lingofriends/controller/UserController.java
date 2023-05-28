@@ -4,14 +4,21 @@ import com.tms.lingofriends.exception.BadReqException;
 import com.tms.lingofriends.model.User;
 import com.tms.lingofriends.model.response.UserResponse;
 import com.tms.lingofriends.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -22,7 +29,6 @@ import static com.tms.lingofriends.util.ExceptionMesseges.NOT_UPDATE;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final UserService userService;
 
     @Autowired
@@ -30,21 +36,21 @@ public class UserController {
         this.userService = userService;
     }
 
-    // admin user all
+    @Operation(summary = "Get information about all users for admin.")
     @GetMapping
     public ResponseEntity<List<User>> getAllUser() {
         List<User> userList = userService.getAllUsers();
         return new ResponseEntity<>(userList, (!userList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    // user user all
+    @Operation(summary = "Get information about all users for user.")
     @GetMapping("/res")
     public ResponseEntity<List<UserResponse>> getAllUserResponse() {
         List<UserResponse> userList = userService.getAllUsersResponse();
         return new ResponseEntity<>(userList, (!userList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    // admin user by id
+    @Operation(summary = "Get information about user by id for admin.")
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id) {
         User user = userService.getUserById(id);
@@ -54,19 +60,19 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    // user user by id
+    @Operation(summary = "Get information about user by id for user.")
     @GetMapping("/res/{id}")
     public ResponseEntity<UserResponse> getUserResponseById(@PathVariable int id) {
         return new ResponseEntity<>(userService.getUserResponseById(id), HttpStatus.OK);
     }
 
-    //  user by name
+    @Operation(summary = "Get information about user by user name for user.")
     @GetMapping("/name/res/{name}")
     public ResponseEntity<UserResponse> findUserResponseByUserName(@PathVariable String name) {
         return new ResponseEntity<>(userService.findUserResponseByUserName(name), HttpStatus.OK);
     }
 
-    //  user by lang name
+    @Operation(summary = "Get information about user by language name for user.")
     @GetMapping("/res/ln/{languageName}")
     public ResponseEntity<List<UserResponse>> findUserResponseByLanguageName(@PathVariable String languageName) {
         List<UserResponse> list = userService.findUserResponseByLanguageName(languageName);
@@ -99,9 +105,9 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
- /*  @PostMapping("/addcourse")
+   @PostMapping("/addcourse")
     public ResponseEntity<HttpStatus> addCourseToUser(@RequestParam int userId, @RequestParam int courseId) {
         userService.addCourseToUser(userId, courseId);
         return new ResponseEntity<>(HttpStatus.OK);
-    }*/
+    }
 }

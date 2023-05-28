@@ -17,6 +17,7 @@ public class ExceptionController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ExceptionMessage(HttpStatus.NOT_FOUND, Timestamp.valueOf(LocalDateTime.now()), exception.getMessage()));
     }
+
     @ExceptionHandler(BadReqException.class)
     public ResponseEntity<ExceptionMessage> BadReqExceptionHandler(BadReqException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(

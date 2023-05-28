@@ -4,21 +4,24 @@ import com.tms.lingofriends.model.Course;
 
 import com.tms.lingofriends.model.response.CourseResponse;
 import com.tms.lingofriends.service.CourseService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/course")
 public class CourseController {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final CourseService courseService;
 
     @Autowired
@@ -26,21 +29,21 @@ public class CourseController {
         this.courseService = courseService;
     }
 
-    // for admin  all course
+    @Operation(summary = "Get information about all courses for admin.")
     @GetMapping
     public ResponseEntity<List<Course>> getAllCourse() {
         List<Course> courseList = courseService.getAllCourse();
         return new ResponseEntity<>(courseList, (!courseList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    // for user  all course
+    @Operation(summary = "Get information about all courses for user. ")
     @GetMapping("/res")
     public ResponseEntity<List<CourseResponse>> getAllCoursesResponse() {
         List<CourseResponse> coursesList = courseService.getAllCoursesResponse();
         return new ResponseEntity<>(coursesList, (!coursesList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    // for admin course by id
+    @Operation(summary = "Get information about course by id for admin.")
     @GetMapping("/{id}")
     public ResponseEntity<Course> getCourseById(@PathVariable int id) {
         Course course = courseService.getCourseById(id);
@@ -50,27 +53,27 @@ public class CourseController {
         return new ResponseEntity<>(course, HttpStatus.OK);
     }
 
-    // for user course by id
+    @Operation(summary = "Get information about course by id for user. ")
     @GetMapping("/res/{id}")
     public ResponseEntity<CourseResponse> getCourseResponseById(@PathVariable int id) {
         return new ResponseEntity<>(courseService.getCourseResponseById(id), HttpStatus.OK);
     }
 
-    // for admin by language
+    @Operation(summary = " Get information about course by language name for user.")
     @GetMapping("/res/ln/{languageName}")
     public ResponseEntity<List<CourseResponse>> findCourseResponseByLanguageName(@PathVariable String languageName) {
         List<CourseResponse> list = courseService.findCourseResponseByLanguageName(languageName);
         return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
-    // for admin by user id
+
+    @Operation(summary = "Get information about course by  user id for admin.")
     @GetMapping("/us/{userId}")
     public ResponseEntity<List<Course>> findCourseByUserId(@PathVariable Integer userId) {
-
         List<Course> list = courseService.findCourseByUserId(userId);
         return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    // for user by user id
+    @Operation(summary = "Get information about course by user id for user.")
     @GetMapping("/res/us/{userId}")
     public ResponseEntity<List<CourseResponse>> findCourseResponseByUserId(@PathVariable Integer userId) {
         List<CourseResponse> list = courseService.findCourseResponseByUserId(userId);
@@ -78,13 +81,7 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> createCourse(@RequestBody Course course, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            for (ObjectError o : bindingResult.getAllErrors()) {
-
-                log.warn("We have bindingResult error : " + o);
-            }
-        }
+    public ResponseEntity<HttpStatus> createCourse(@RequestBody Course course) {
         courseService.createCourse(course);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -99,9 +96,4 @@ public class CourseController {
         courseService.deleteCourseById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
- /* @PostMapping("/edtocourse")
-  public ResponseEntity<HttpStatus> addEdProductToCourse(@RequestParam int courseId, @RequestParam int edprodId) {
-      courseService.addEdProductToCourse(courseId, edprodId);
-      return new ResponseEntity<>(HttpStatus.OK);
-  }*/
 }

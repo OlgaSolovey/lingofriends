@@ -3,20 +3,18 @@ package com.tms.lingofriends.service;
 import com.tms.lingofriends.exception.NotFoundException;
 import com.tms.lingofriends.mapper.CourseToCourseResponseMapper;
 import com.tms.lingofriends.model.Course;
-import com.tms.lingofriends.model.User;
 import com.tms.lingofriends.model.response.CourseResponse;
-import com.tms.lingofriends.model.response.UserResponse;
 import com.tms.lingofriends.repository.CourseRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.tms.lingofriends.util.ExceptionMesseges.*;
+import static com.tms.lingofriends.util.ExceptionMesseges.COURSES_NOT_FOUND;
+import static com.tms.lingofriends.util.ExceptionMesseges.COURSE_NOT_FOUND;
 
 @Service
 public class CourseService {
@@ -63,7 +61,6 @@ public class CourseService {
         } else throw new NotFoundException(COURSE_NOT_FOUND);
     }
 
-    // for user by language
     public List<CourseResponse> findCourseResponseByLanguageName(String languageName) {
         List<CourseResponse> courses = courseRepository.findCourseByLanguageName(languageName).stream()
                 .filter(course -> !course.isDeleted())
@@ -97,7 +94,6 @@ public class CourseService {
             throw new NotFoundException(COURSES_NOT_FOUND);
         }
     }
-
 
     public Course createCourse(Course course) {
         return courseRepository.save(course);

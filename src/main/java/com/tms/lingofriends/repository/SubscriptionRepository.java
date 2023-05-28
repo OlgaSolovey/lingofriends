@@ -6,11 +6,16 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface SubscriptionRepository extends JpaRepository<Subscription, Integer> {
+    List<Subscription> findSubscriptionByUserId(Integer userId);
+
     @Transactional
     @Modifying
     @Query(
             nativeQuery = true,
             value = "UPDATE subscription_table SET is_deleted = true WHERE id = :id")
     void deleteSubscriptionById(int id);
+
 }

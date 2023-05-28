@@ -102,8 +102,8 @@ public class UserService {
     public void deleteUserById(int id) {
         userRepository.deleteUserById(id);
     }
- /* @Transactional
+  @Transactional
    public void addCourseToUser(int userId, int courseId) {
        userRepository.addCourseToUser(userId, courseId);
-   }*/
+   }
 }

@@ -1,6 +1,5 @@
 package com.tms.lingofriends.repository;
 
-
 import com.tms.lingofriends.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,6 +14,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findUserByUserName(String name);
+
     List<User> findUserByLanguageName(String languageName);
 
     @Transactional
@@ -29,4 +29,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             value = "INSERT INTO l_users_course (id, user_id, course_id) VALUES (DEFAULT, :userId, :courseId)",
             countQuery = "SELECT * FROM l_users_course WHERE user_id = :userId, course_id=:courseId")
     void addCourseToUser(int userId, int courseId);*/
+       @Modifying
+    @Query(nativeQuery = true,
+    value = "INSERT INTO l_user_course_table (id, user_id, course_id) VALUES (DEFAULT, :userId, :courseId)")
+    void addCourseToUser(Integer userId, Integer courseId);
 }
