@@ -29,7 +29,7 @@ public class Course {
     @Column(name = "description")
     private String description;
     @Column(name = "user_id")
-    private Long userId;
+    private int userId;
     @Column(name = "language_name")
     private String languageName;
     @Column(name = "created")

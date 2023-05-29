@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 ;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,9 +31,10 @@ public class User {
     private String userName;
     @Column(name = "language_name")
     private String languageName;
+    @Pattern(regexp = "[A-Z]*")
     @Column(name = "login")
     private String login;
-    @Size(min = 5, max = 10)
+    @Size(min = 10, max = 100)
     @Column(name = "password")
     private String password;
     @Column(name = "role")

@@ -1,6 +1,7 @@
 package com.tms.lingofriends.controller;
 
 import com.tms.lingofriends.exception.BadReqException;
+import com.tms.lingofriends.model.Course;
 import com.tms.lingofriends.model.User;
 import com.tms.lingofriends.model.response.UserResponse;
 import com.tms.lingofriends.service.UserService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.tms.lingofriends.util.ExceptionMesseges.NOT_CREATED;
@@ -105,9 +107,17 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-   @PostMapping("/addcourse")
+    @Operation(summary = "Add favorite course to user.")
+    @PostMapping("/addcourse")
     public ResponseEntity<HttpStatus> addCourseToUser(@RequestParam int userId, @RequestParam int courseId) {
         userService.addCourseToUser(userId, courseId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @Operation(summary = "Get favorite course for user.")
+    @GetMapping("/getCourse/{id}")
+    public ResponseEntity<List<Course>> giveAllCourseForThisUser(@PathVariable int id) {
+        return new ResponseEntity<>(userService.getCourseForUser(id), HttpStatus.OK);
+    }
+
 }

@@ -2,6 +2,7 @@ package com.tms.lingofriends.service;
 
 import com.tms.lingofriends.exception.NotFoundException;
 import com.tms.lingofriends.mapper.UserToUserResponseMapper;
+import com.tms.lingofriends.model.Course;
 import com.tms.lingofriends.model.User;
 import com.tms.lingofriends.model.response.UserResponse;
 import com.tms.lingofriends.repository.UserRepository;
@@ -106,4 +107,13 @@ public class UserService {
    public void addCourseToUser(int userId, int courseId) {
        userRepository.addCourseToUser(userId, courseId);
    }
+   @Transactional
+    public List<Course> getCourseForUser(int userId) {
+        List<Course> courses = userRepository.getCourseForUser(userId);
+        if (!courses.isEmpty()) {
+            return courses;
+        } else {
+            throw new NotFoundException(USERS_NOT_FOUND);
+        }
+    }
 }
