@@ -30,21 +30,21 @@ public class CourseController {
     }
 
     @Operation(summary = "Get information about all courses for admin.")
-    @GetMapping
+    @GetMapping("/admin/all")
     public ResponseEntity<List<Course>> getAllCourse() {
         List<Course> courseList = courseService.getAllCourse();
         return new ResponseEntity<>(courseList, (!courseList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
     @Operation(summary = "Get information about all courses for user. ")
-    @GetMapping("/res")
+    @GetMapping("/res/all")
     public ResponseEntity<List<CourseResponse>> getAllCoursesResponse() {
         List<CourseResponse> coursesList = courseService.getAllCoursesResponse();
         return new ResponseEntity<>(coursesList, (!coursesList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
     @Operation(summary = "Get information about course by id for admin.")
-    @GetMapping("/{id}")
+    @GetMapping("/admin/{id}")
     public ResponseEntity<Course> getCourseById(@PathVariable int id) {
         Course course = courseService.getCourseById(id);
         if (course == null) {
@@ -67,7 +67,7 @@ public class CourseController {
     }
 
     @Operation(summary = "Get information about course by  user id for admin.")
-    @GetMapping("/us/{userId}")
+    @GetMapping("/admin/us/{userId}")
     public ResponseEntity<List<Course>> findCourseByUserId(@PathVariable Integer userId) {
         List<Course> list = courseService.findCourseByUserId(userId);
         return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
@@ -80,13 +80,13 @@ public class CourseController {
         return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<HttpStatus> createCourse(@RequestBody Course course) {
         courseService.createCourse(course);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping
+    @PutMapping("/update")
     public void updateCourse(@RequestBody Course course) {
         courseService.updateCourse(course);
     }

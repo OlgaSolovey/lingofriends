@@ -1,13 +1,18 @@
 package com.tms.lingofriends.service;
 
+import com.tms.lingofriends.exception.AccessException;
+import com.tms.lingofriends.exception.BadReqException;
 import com.tms.lingofriends.exception.NotFoundException;
 import com.tms.lingofriends.mapper.UserToUserResponseMapper;
 import com.tms.lingofriends.model.Course;
 import com.tms.lingofriends.model.User;
+import com.tms.lingofriends.model.response.PasswordRequest;
 import com.tms.lingofriends.model.response.UserResponse;
 import com.tms.lingofriends.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -15,21 +20,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.tms.lingofriends.util.ExceptionMesseges.ACCESS_IS_DENIED;
+import static com.tms.lingofriends.util.ExceptionMesseges.BAD_PASSWORD;
 import static com.tms.lingofriends.util.ExceptionMesseges.USERS_NOT_FOUND;
 import static com.tms.lingofriends.util.ExceptionMesseges.USER_NOT_FOUND;
 
 @Service
 public class UserService {
-    UserRepository userRepository;
-    UserToUserResponseMapper userToUserResponseMapper;
+    private final UserRepository userRepository;
+    private final UserToUserResponseMapper userToUserResponseMapper;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Autowired
-    public UserService(UserRepository userRepository, UserToUserResponseMapper userToUserResponseMapper) {
+    public UserService(UserRepository userRepository, UserToUserResponseMapper userToUserResponseMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userToUserResponseMapper = userToUserResponseMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    // !for admin get all user
     public List<User> getAllUsers() {
         List<User> users = userRepository.findAll();
         if (!users.isEmpty()) {
@@ -39,7 +48,6 @@ public class UserService {
         }
     }
 
-    // !for user get all user
     public List<UserResponse> getAllUsersResponse() throws NotFoundException {
         List<UserResponse> users = userRepository.findAll().stream()
                 .filter(user -> !user.isDeleted())
@@ -50,13 +58,11 @@ public class UserService {
         } else throw new NotFoundException(USERS_NOT_FOUND);
     }
 
-    // !for admin get by id
     public User getUserById(int id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new NotFoundException(USER_NOT_FOUND));
     }
 
-    // !for user get by id
     public UserResponse getUserResponseById(int id) {
         Optional<User> user = userRepository.findById(id);
         if (!user.isEmpty()) {
@@ -64,7 +70,6 @@ public class UserService {
         } else throw new NotFoundException(USER_NOT_FOUND);
     }
 
-    // !for user findUserByUserName
     public UserResponse findUserResponseByUserName(String name) {
         Optional<User> user = userRepository.findUserByUserName(name);
         if (!user.isEmpty()) {
@@ -74,7 +79,6 @@ public class UserService {
         }
     }
 
-    // !for user findUserBy lang
     public List<UserResponse> findUserResponseByLanguageName(String languageName) {
         List<UserResponse> users = userRepository.findUserByLanguageName(languageName).stream()
                 .filter(user -> !user.isDeleted())
@@ -95,19 +99,26 @@ public class UserService {
     }
 
     public User updateUser(User user) {
-        user.setChanged(new Timestamp(System.currentTimeMillis()));
-        return userRepository.saveAndFlush(user);
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (login.equals(user)) {
+            user.setChanged(new Timestamp(System.currentTimeMillis()));
+            return userRepository.saveAndFlush(user);
+        } else {
+            throw new AccessException(ACCESS_IS_DENIED);
+        }
     }
 
     @Transactional
     public void deleteUserById(int id) {
         userRepository.deleteUserById(id);
     }
-  @Transactional
-   public void addCourseToUser(int userId, int courseId) {
-       userRepository.addCourseToUser(userId, courseId);
-   }
-   @Transactional
+
+    @Transactional
+    public void addCourseToUser(int userId, int courseId) {
+        userRepository.addCourseToUser(userId, courseId);
+    }
+
+    @Transactional
     public List<Course> getCourseForUser(int userId) {
         List<Course> courses = userRepository.getCourseForUser(userId);
         if (!courses.isEmpty()) {
@@ -115,5 +126,26 @@ public class UserService {
         } else {
             throw new NotFoundException(USERS_NOT_FOUND);
         }
+    }
+
+    @Transactional
+    public void changeUserPassword(PasswordRequest request) {
+        User user = getUser(request.getId());
+        if (passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            String codePass = passwordEncoder.encode(request.getNewPassword());
+            user.setChanged(new Timestamp(System.currentTimeMillis()));
+            userRepository.changeUserPassword(request.getId(), codePass);
+        } else {
+            throw new BadReqException(BAD_PASSWORD);
+        }
+    }
+
+    private User getUser(int id) {
+        return userRepository.findById(id).filter(user -> !user.isDeleted())
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+    }
+    public boolean authorization(String login) {
+        return SecurityContextHolder.getContext()
+                .getAuthentication().getName().equals(login);
     }
 }

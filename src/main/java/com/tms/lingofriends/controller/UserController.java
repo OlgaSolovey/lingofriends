@@ -3,6 +3,7 @@ package com.tms.lingofriends.controller;
 import com.tms.lingofriends.exception.BadReqException;
 import com.tms.lingofriends.model.Course;
 import com.tms.lingofriends.model.User;
+import com.tms.lingofriends.model.response.PasswordRequest;
 import com.tms.lingofriends.model.response.UserResponse;
 import com.tms.lingofriends.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,9 +22,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static com.tms.lingofriends.util.ExceptionMesseges.BAD_PASSWORD;
 import static com.tms.lingofriends.util.ExceptionMesseges.NOT_CREATED;
 import static com.tms.lingofriends.util.ExceptionMesseges.NOT_UPDATE;
 
@@ -39,21 +40,21 @@ public class UserController {
     }
 
     @Operation(summary = "Get information about all users for admin.")
-    @GetMapping
+    @GetMapping("/admin/all")
     public ResponseEntity<List<User>> getAllUser() {
         List<User> userList = userService.getAllUsers();
         return new ResponseEntity<>(userList, (!userList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
     @Operation(summary = "Get information about all users for user.")
-    @GetMapping("/res")
+    @GetMapping("/res/all")
     public ResponseEntity<List<UserResponse>> getAllUserResponse() {
         List<UserResponse> userList = userService.getAllUsersResponse();
         return new ResponseEntity<>(userList, (!userList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
     @Operation(summary = "Get information about user by id for admin.")
-    @GetMapping("/{id}")
+    @GetMapping("/admin/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id) {
         User user = userService.getUserById(id);
         if (user == null) {
@@ -69,7 +70,7 @@ public class UserController {
     }
 
     @Operation(summary = "Get information about user by user name for user.")
-    @GetMapping("/name/res/{name}")
+    @GetMapping("/res/name/{name}")
     public ResponseEntity<UserResponse> findUserResponseByUserName(@PathVariable String name) {
         return new ResponseEntity<>(userService.findUserResponseByUserName(name), HttpStatus.OK);
     }
@@ -81,7 +82,7 @@ public class UserController {
         return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<User> createUser(@RequestBody @Valid User user, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             userService.createUser(user);
@@ -91,7 +92,7 @@ public class UserController {
         }
     }
 
-    @PutMapping
+    @PutMapping("/update")
     public ResponseEntity<HttpStatus> updateUser(@RequestBody @Valid User user, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             userService.updateUser(user);
@@ -115,9 +116,19 @@ public class UserController {
     }
 
     @Operation(summary = "Get favorite course for user.")
-    @GetMapping("/getCourse/{id}")
-    public ResponseEntity<List<Course>> giveAllCourseForThisUser(@PathVariable int id) {
-        return new ResponseEntity<>(userService.getCourseForUser(id), HttpStatus.OK);
+    @GetMapping("/getCourse/{userId}")
+    public ResponseEntity<List<Course>> giveAllCourseForThisUser(@PathVariable int userId) {
+        return new ResponseEntity<>(userService.getCourseForUser(userId), HttpStatus.OK);
+    }
+
+    @PutMapping("/changePass")
+    public ResponseEntity<HttpStatus> changeUserPassword(@RequestBody @Valid PasswordRequest request, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            userService.changeUserPassword(request);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            throw new BadReqException(BAD_PASSWORD);
+        }
     }
 
 }

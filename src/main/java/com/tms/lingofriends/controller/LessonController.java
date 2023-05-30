@@ -35,21 +35,21 @@ public class LessonController {
     }
 
     @Operation(summary = "Get information about all lessons for admin.")
-    @GetMapping
+    @GetMapping("/admin/all")
     public ResponseEntity<List<Lesson>> getAllLesson() {
         List<Lesson> lessonList = lessonService.getAllLesson();
         return new ResponseEntity<>(lessonList, (!lessonList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
     @Operation(summary = "Get information about all lessons for user.")
-    @GetMapping("/res")
+    @GetMapping("/res/all")
     public ResponseEntity<List<LessonResponse>> getAllLessonResponse() {
         List<LessonResponse> lessonsList = lessonService.getAllLessonResponse();
         return new ResponseEntity<>(lessonsList, (!lessonsList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
     @Operation(summary = "Get information about lesson by id for admin.")
-    @GetMapping("/{id}")
+    @GetMapping("/admin/{id}")
     public ResponseEntity<Lesson> getLessonById(@PathVariable int id) {
         Lesson lesson = lessonService.getLessonById(id);
         if (lesson == null) {
@@ -65,7 +65,7 @@ public class LessonController {
     }
 
     @Operation(summary = " Get information about lesson by course id for admin.")
-    @GetMapping("/cr/{courseId}")
+    @GetMapping("/admin/cr/{courseId}")
     public ResponseEntity<List<Lesson>> findLessonByCourseId(@PathVariable Integer courseId) {
         List<Lesson> list = lessonService.findLessonByCourseId(courseId);
         return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
@@ -85,13 +85,13 @@ public class LessonController {
         return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<HttpStatus> createLesson(@RequestBody Lesson lesson) {
         lessonService.createLesson(lesson);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping
+    @PutMapping("/update")
     public void updateLesson(@RequestBody Lesson lesson) {
         lessonService.updateLesson(lesson);
     }

@@ -11,14 +11,6 @@ public class ExceptionMesseges {
     public final static String SUBSCRIPTION_NOT_FOUND = "Subscription not found!";
     public final static String NOT_CREATED = "Not created! Check your information and try again!";
     public final static String NOT_UPDATE = "Not update! Check your information and try again!";
-
-       String NOT_FOUND = "The requested URL was not found on this server";
-
-    String AUTHORITY_NOT_FOUND = "Authority not found";
-    String INSERT_AUTHORITY_EXCEPTION = "Insert authority exception";
-    String DELETE_AUTHORITY_EXCEPTION = "Delete user exception";
-
-
-    String CHANGE_PASSWORD_BAD_CREDENTIALS = "Passwords doesn't match";
-
+    public final static String ACCESS_IS_DENIED = "You can't update another user!";
+    public final static String BAD_PASSWORD = "Check your old and new password!";
 }

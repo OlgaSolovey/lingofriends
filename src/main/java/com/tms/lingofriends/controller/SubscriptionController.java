@@ -30,13 +30,13 @@ public class SubscriptionController {
         this.subscriptionService = subscriptionService;
     }
     @Operation(summary = "Get information about  all subscription  for admin.")
-    @GetMapping
+    @GetMapping("/admin/all")
     public ResponseEntity<List<Subscription>> getAllSubscription() {
         List<Subscription> subscriptionsList = subscriptionService.getAllSubscription();
         return new ResponseEntity<>(subscriptionsList, (!subscriptionsList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
     @Operation(summary = "Get information about subscription by id for admin.")
-    @GetMapping("/{id}")
+    @GetMapping("/admin/{id}")
     public ResponseEntity<Subscription> getSubscriptionById(@PathVariable int id) {
         Subscription subscription = subscriptionService.getSubscriptionById(id);
         if (subscription == null) {
@@ -50,7 +50,7 @@ public class SubscriptionController {
         return new ResponseEntity<>(subscriptionService.getSubscriptionResponseById(id), HttpStatus.OK);
     }
     @Operation(summary = "Get information about subscription by  user id for user.")
-    @GetMapping("/res/us/{userId}")
+    @GetMapping("/us/{userId}")
     public ResponseEntity<List<SubscriptionResponse>> findSubscriptionResponseByUserId(@PathVariable Integer userId) {
         List<SubscriptionResponse> list = subscriptionService.findSubscriptionResponseByUserId(userId);
         return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
