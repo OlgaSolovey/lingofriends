@@ -72,7 +72,7 @@ public class SubscriptionController {
 
     @PutMapping
     public void updateSubscription(@RequestBody Subscription subscription) {
-        subscriptionService.updateCourse(subscription);
+        subscriptionService.updateSubscription(subscription);
     }
 
     @DeleteMapping("/{id}")

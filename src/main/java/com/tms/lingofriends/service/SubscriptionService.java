@@ -6,6 +6,7 @@ import com.tms.lingofriends.mapper.SubscriptionToSubscriptionResponseMapper;
 import com.tms.lingofriends.model.Subscription;
 import com.tms.lingofriends.model.response.SubscriptionResponse;
 import com.tms.lingofriends.repository.SubscriptionRepository;
+import com.tms.lingofriends.security.Authorization;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,11 +26,13 @@ import static com.tms.lingofriends.util.ExceptionMesseges.SUBSCRIPTIONS_NOT_FOUN
 public class SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
     private final SubscriptionToSubscriptionResponseMapper subscriptionToSubscriptionResponseMapper;
+    private  final Authorization authorization;
 
     @Autowired
-    public SubscriptionService(SubscriptionRepository subscriptionRepository, SubscriptionToSubscriptionResponseMapper subscriptionToSubscriptionResponseMapper) {
+    public SubscriptionService(SubscriptionRepository subscriptionRepository, SubscriptionToSubscriptionResponseMapper subscriptionToSubscriptionResponseMapper, Authorization authorization) {
         this.subscriptionRepository = subscriptionRepository;
         this.subscriptionToSubscriptionResponseMapper = subscriptionToSubscriptionResponseMapper;
+        this.authorization = authorization;
     }
 
     public List<Subscription> getAllSubscription() {
@@ -70,9 +73,9 @@ public class SubscriptionService {
         return subscriptionRepository.save(subscription);
     }
 
-    public Subscription updateCourse(Subscription subscription) {
+    public Subscription updateSubscription(Subscription subscription) {
         Subscription subscription1 = subscriptionRepository.findById(subscription.getId()).get();
-        if (authorization(subscription1.getUserLogin())) {
+        if (authorization.authorization(subscription1.getUserLogin())) {
             return subscriptionRepository.saveAndFlush(subscription);
         } else {
             throw new AccessException(ACCESS_IS_DENIED);
@@ -81,7 +84,7 @@ public class SubscriptionService {
 
     @Transactional
     public void deleteSubscriptionById(int id) {
-        if (authorization(getUserLogin(id))) {
+        if (authorization.authorization(getUserLogin(id))) {
             subscriptionRepository.deleteSubscriptionById(id);
         } else {
             throw new AccessException(ACCESS_IS_DENIED);
@@ -90,10 +93,5 @@ public class SubscriptionService {
 
     private String getUserLogin(int id) {
         return subscriptionRepository.findById(id).get().getUserLogin();
-    }
-
-    public boolean authorization(String login) {
-        return SecurityContextHolder.getContext()
-                .getAuthentication().getName().equals(login);
     }
 }
