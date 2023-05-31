@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.validation.BindingResult;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -83,6 +82,7 @@ public class CourseServiceTest {
         when(courseToCourseResponseMapper.courseToResponse(course)).thenReturn(courseResponse);
         assertEquals(courseResponses, courseService.findCourseResponseByLanguageName(course.getLanguageName()));
     }
+
     @Test
     public void findCourseResponseByUserIdTest() {
         when(courseRepository.findCourseByUserId(course.getUserId())).thenReturn(courses);
@@ -97,7 +97,6 @@ public class CourseServiceTest {
         courseService.createCourse(course);
         verify(courseRepository).save(course);
     }
-
 
 
     @Test

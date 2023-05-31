@@ -33,8 +33,6 @@ public class LessonServiceTest {
     @Mock
     private LessonToLessonResponseMapper lessonToLessonResponseMapper;
     @Mock
-    private BindingResult bindingResult;
-    @Mock
     private Authorization authorization;
     private int id;
     private Lesson lesson;
@@ -80,12 +78,14 @@ public class LessonServiceTest {
         verify(lessonToLessonResponseMapper).lessonToResponse(lesson);
         assertEquals(lessonResponse, returned);
     }
+
     @Test
     public void findLessonResponseByUserIdTest() {
         when(lessonRepository.findLessonByUserId(Math.toIntExact(lesson.getUserId()))).thenReturn(lessons);
         when(lessonToLessonResponseMapper.lessonToResponse(lesson)).thenReturn(lessonResponse);
         assertEquals(lessonResponses, lessonService.findLessonResponseByUserId(Math.toIntExact(lesson.getUserId())));
     }
+
     @Test
     public void findLessonResponseByCourseIdTest() {
         when(lessonRepository.findLessonByCourseId(Math.toIntExact(lesson.getCourseId()))).thenReturn(lessons);
@@ -100,7 +100,6 @@ public class LessonServiceTest {
         lessonService.createLesson(lesson);
         verify(lessonRepository).save(lesson);
     }
-
 
 
     @Test
@@ -118,5 +117,4 @@ public class LessonServiceTest {
         lessonService.deleteLessonById(id);
         verify(lessonRepository).deleteLessonById(id);
     }
-
 }
