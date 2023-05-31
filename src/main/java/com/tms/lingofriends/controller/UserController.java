@@ -130,5 +130,4 @@ public class UserController {
             throw new BadReqException(BAD_PASSWORD);
         }
     }
-
 }

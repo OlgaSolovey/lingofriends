@@ -11,7 +11,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 
 @Data
@@ -27,8 +26,9 @@ public class Subscription {
     private Integer id;
     @Column(name = "user_id")
     private int userId;
+    @Column(name = "user_login")
+    private String userLogin;
     @Column(name = "expire_date")
-
     private LocalDate expireDate;
     @Column(name = "status")
     private Boolean status;

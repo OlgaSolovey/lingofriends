@@ -95,6 +95,7 @@ public class UserService {
         user.setCreated(new Timestamp(System.currentTimeMillis()));
         user.setChanged(new Timestamp(System.currentTimeMillis()));
         user.setDeleted(false);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -110,21 +111,30 @@ public class UserService {
 
     @Transactional
     public void deleteUserById(int id) {
-        userRepository.deleteUserById(id);
+        if (authorization(getUser(id).getLogin())) {
+            userRepository.deleteUserById(id);
+        } else {
+            throw new AccessException(ACCESS_IS_DENIED);
+        }
     }
 
     @Transactional
     public void addCourseToUser(int userId, int courseId) {
-        userRepository.addCourseToUser(userId, courseId);
+        if (authorization(getUser(userId).getLogin())) {
+            userRepository.addCourseToUser(userId, courseId);
+        } else {
+            throw new AccessException(ACCESS_IS_DENIED);
+        }
     }
+
 
     @Transactional
     public List<Course> getCourseForUser(int userId) {
-        List<Course> courses = userRepository.getCourseForUser(userId);
-        if (!courses.isEmpty()) {
+        if (authorization(getUser(userId).getLogin())) {
+            List<Course> courses = userRepository.getCourseForUser(userId);
             return courses;
         } else {
-            throw new NotFoundException(USERS_NOT_FOUND);
+            throw new AccessException(ACCESS_IS_DENIED);
         }
     }
 
@@ -144,6 +154,7 @@ public class UserService {
         return userRepository.findById(id).filter(user -> !user.isDeleted())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
     }
+
     public boolean authorization(String login) {
         return SecurityContextHolder.getContext()
                 .getAuthentication().getName().equals(login);

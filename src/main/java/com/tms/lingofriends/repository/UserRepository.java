@@ -17,6 +17,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findUserByUserName(String name);
 
     List<User> findUserByLanguageName(String languageName);
+
     Optional<User> findUserByLogin(String login);
 
     @Transactional
@@ -29,13 +30,14 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Query(nativeQuery = true,
             value = "INSERT INTO l_user_course_table (id, user_id, course_id) VALUES (DEFAULT, :userId, :courseId)")
-    void addCourseToUser(int userId , int courseId);
+    void addCourseToUser(int userId, int courseId);
 
     @Modifying
     @Query(nativeQuery = true,
             value = "SELECT c.id,c.user_id,c.title,c.language_name,c.description,c.created,c.changed,c.is_deleted" +
                     " FROM l_user_course_table JOIN course_table as c ON l_user_course_table.course_id = c.id WHERE l_user_course_table.user_id=:userId")
     List<Course> getCourseForUser(int userId);
+
     @Modifying
     @Query(
             nativeQuery = true,

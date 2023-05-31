@@ -2,7 +2,6 @@ package com.tms.lingofriends.controller;
 
 import com.tms.lingofriends.mapper.LessonToLessonResponseMapper;
 import com.tms.lingofriends.model.Lesson;
-import com.tms.lingofriends.model.response.CourseResponse;
 import com.tms.lingofriends.model.response.LessonResponse;
 import com.tms.lingofriends.service.LessonService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,11 +26,10 @@ public class LessonController {
     private final LessonService lessonService;
     private final LessonToLessonResponseMapper lessonToLessonResponseMapper;
 
-
     @Autowired
     public LessonController(LessonService lessonService, LessonToLessonResponseMapper lessonToLessonResponseMapper) {
         this.lessonService = lessonService;
-        this.lessonToLessonResponseMapper =lessonToLessonResponseMapper;
+        this.lessonToLessonResponseMapper = lessonToLessonResponseMapper;
     }
 
     @Operation(summary = "Get information about all lessons for admin.")

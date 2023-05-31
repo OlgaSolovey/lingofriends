@@ -12,8 +12,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -34,11 +32,12 @@ public class Course {
     private Integer userId;
     @Column(name = "language_name")
     private String languageName;
+    @Column(name = "user_login")
+    private String userLogin;
     @Column(name = "created")
     private Timestamp created;
     @Column(name = "changed")
     private Timestamp changed;
     @Column(name = "is_deleted")
     private boolean isDeleted;
-
 }

@@ -5,10 +5,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
-;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.SequenceGenerator;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +29,7 @@ public class User {
     private String userName;
     @Column(name = "language_name")
     private String languageName;
-    @Pattern(regexp = "[A-Z]*")
+    @Size(min = 5, max = 20)
     @Column(name = "login")
     private String login;
     @Size(min = 10, max = 100)

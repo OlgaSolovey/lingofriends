@@ -1,7 +1,6 @@
 package com.tms.lingofriends.controller;
 
 import com.tms.lingofriends.model.Course;
-
 import com.tms.lingofriends.model.response.CourseResponse;
 import com.tms.lingofriends.service.CourseService;
 import io.swagger.v3.oas.annotations.Operation;

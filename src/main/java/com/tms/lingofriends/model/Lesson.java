@@ -36,6 +36,8 @@ public class Lesson {
     private Long courseId;
     @Column(name = "language_name")
     private String languageName;
+    @Column(name = "user_login")
+    private String userLogin;
     @Column(name = "created")
     private Timestamp created;
     @Column(name = "changed")

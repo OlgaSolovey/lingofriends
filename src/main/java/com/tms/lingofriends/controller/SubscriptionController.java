@@ -29,12 +29,14 @@ public class SubscriptionController {
     public SubscriptionController(SubscriptionService subscriptionService) {
         this.subscriptionService = subscriptionService;
     }
+
     @Operation(summary = "Get information about  all subscription  for admin.")
     @GetMapping("/admin/all")
     public ResponseEntity<List<Subscription>> getAllSubscription() {
         List<Subscription> subscriptionsList = subscriptionService.getAllSubscription();
         return new ResponseEntity<>(subscriptionsList, (!subscriptionsList.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
+
     @Operation(summary = "Get information about subscription by id for admin.")
     @GetMapping("/admin/{id}")
     public ResponseEntity<Subscription> getSubscriptionById(@PathVariable int id) {
@@ -44,11 +46,13 @@ public class SubscriptionController {
         }
         return new ResponseEntity<>(subscription, HttpStatus.OK);
     }
+
     @Operation(summary = "Get information about subscription by id for user.")
     @GetMapping("/res/{id}")
     public ResponseEntity<SubscriptionResponse> getSubscriptionResponseById(@PathVariable int id) {
         return new ResponseEntity<>(subscriptionService.getSubscriptionResponseById(id), HttpStatus.OK);
     }
+
     @Operation(summary = "Get information about subscription by  user id for user.")
     @GetMapping("/us/{userId}")
     public ResponseEntity<List<SubscriptionResponse>> findSubscriptionResponseByUserId(@PathVariable Integer userId) {
