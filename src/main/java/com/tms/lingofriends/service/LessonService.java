@@ -6,9 +6,9 @@ import com.tms.lingofriends.mapper.LessonToLessonResponseMapper;
 import com.tms.lingofriends.model.Lesson;
 import com.tms.lingofriends.model.response.LessonResponse;
 import com.tms.lingofriends.repository.LessonRepository;
+import com.tms.lingofriends.security.Authorization;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -24,11 +24,13 @@ import static com.tms.lingofriends.util.ExceptionMesseges.LESSONS_NOT_FOUND;
 public class LessonService {
     private final LessonRepository lessonRepository;
     private final LessonToLessonResponseMapper lessonToLessonResponseMapper;
+    private final Authorization authorization;
 
     @Autowired
-    public LessonService(LessonRepository lessonRepository, LessonToLessonResponseMapper lessonToLessonResponseMapper) {
+    public LessonService(LessonRepository lessonRepository, LessonToLessonResponseMapper lessonToLessonResponseMapper, Authorization authorization) {
         this.lessonRepository = lessonRepository;
         this.lessonToLessonResponseMapper = lessonToLessonResponseMapper;
+        this.authorization = authorization;
     }
 
     public List<Lesson> getAllLesson() {
@@ -102,8 +104,8 @@ public class LessonService {
     }
 
     public Lesson updateLesson(Lesson lesson) {
-        Lesson lessons = lessonRepository.findById(lesson.getId()).get();
-        if (authorization(lesson.getUserLogin())) {
+        lessonRepository.findById(lesson.getId()).get();
+        if (authorization.authorization(lesson.getUserLogin())) {
             return lessonRepository.saveAndFlush(lesson);
         } else {
             throw new AccessException(ACCESS_IS_DENIED);
@@ -112,7 +114,7 @@ public class LessonService {
 
     @Transactional
     public void deleteLessonById(int id) {
-        if (authorization(getUserLogin(id))) {
+        if (authorization.authorization(getUserLogin(id))) {
             lessonRepository.deleteLessonById(id);
         } else {
             throw new AccessException(ACCESS_IS_DENIED);
@@ -121,10 +123,5 @@ public class LessonService {
 
     private String getUserLogin(int id) {
         return lessonRepository.findById(id).get().getUserLogin();
-    }
-
-    public boolean authorization(String login) {
-        return SecurityContextHolder.getContext()
-                .getAuthentication().getName().equals(login);
     }
 }

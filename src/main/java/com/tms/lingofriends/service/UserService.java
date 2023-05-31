@@ -9,9 +9,9 @@ import com.tms.lingofriends.model.User;
 import com.tms.lingofriends.model.response.PasswordRequest;
 import com.tms.lingofriends.model.response.UserResponse;
 import com.tms.lingofriends.repository.UserRepository;
+import com.tms.lingofriends.security.Authorization;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,13 +30,15 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserToUserResponseMapper userToUserResponseMapper;
     private final PasswordEncoder passwordEncoder;
+    private  final Authorization authorization;
 
 
     @Autowired
-    public UserService(UserRepository userRepository, UserToUserResponseMapper userToUserResponseMapper, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, UserToUserResponseMapper userToUserResponseMapper, PasswordEncoder passwordEncoder, Authorization authorization) {
         this.userRepository = userRepository;
         this.userToUserResponseMapper = userToUserResponseMapper;
         this.passwordEncoder = passwordEncoder;
+        this.authorization = authorization;
     }
 
     public List<User> getAllUsers() {
@@ -100,7 +102,7 @@ public class UserService {
     }
 
     public User updateUser(User user) {
-        if (authorization(user.getLogin())) {
+        if (authorization.authorization(user.getLogin())) {
             user.setChanged(new Timestamp(System.currentTimeMillis()));
             return userRepository.saveAndFlush(user);
         } else {
@@ -110,7 +112,7 @@ public class UserService {
 
     @Transactional
     public void deleteUserById(int id) {
-        if (authorization(getUser(id).getLogin())) {
+        if (authorization.authorization(getUser(id).getLogin())) {
             userRepository.deleteUserById(id);
         } else {
             throw new AccessException(ACCESS_IS_DENIED);
@@ -119,17 +121,16 @@ public class UserService {
 
     @Transactional
     public void addCourseToUser(int userId, int courseId) {
-        if (authorization(getUser(userId).getLogin())) {
+        if (authorization.authorization(getUser(userId).getLogin())) {
             userRepository.addCourseToUser(userId, courseId);
         } else {
             throw new AccessException(ACCESS_IS_DENIED);
         }
     }
 
-
     @Transactional
     public List<Course> getCourseForUser(int userId) {
-        if (authorization(getUser(userId).getLogin())) {
+        if (authorization.authorization(getUser(userId).getLogin())) {
             List<Course> courses = userRepository.getCourseForUser(userId);
             return courses;
         } else {
@@ -152,10 +153,5 @@ public class UserService {
     private User getUser(int id) {
         return userRepository.findById(id).filter(user -> !user.isDeleted())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-    }
-
-    public boolean authorization(String login) {
-        return SecurityContextHolder.getContext()
-                .getAuthentication().getName().equals(login);
     }
 }

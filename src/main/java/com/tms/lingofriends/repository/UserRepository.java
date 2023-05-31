@@ -29,8 +29,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Modifying
     @Query(nativeQuery = true,
-            value = "INSERT INTO l_user_course_table (id, user_id, course_id) VALUES (DEFAULT, :userId, :courseId)")
+            value = "INSERT INTO l_user_course_table (id, user_id, course_id) VALUES (DEFAULT, :userId, :courseId)",
+    countQuery = "SELECT * FROM l_users_course WHERE user_id = :userId, course_id=:courseId")
     void addCourseToUser(int userId, int courseId);
+
 
     @Modifying
     @Query(nativeQuery = true,

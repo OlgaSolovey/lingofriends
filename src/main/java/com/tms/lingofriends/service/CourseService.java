@@ -6,6 +6,7 @@ import com.tms.lingofriends.mapper.CourseToCourseResponseMapper;
 import com.tms.lingofriends.model.Course;
 import com.tms.lingofriends.model.response.CourseResponse;
 import com.tms.lingofriends.repository.CourseRepository;
+import com.tms.lingofriends.security.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,13 @@ import static com.tms.lingofriends.util.ExceptionMesseges.COURSE_NOT_FOUND;
 public class CourseService {
     private final CourseRepository courseRepository;
     private final CourseToCourseResponseMapper courseToCourseResponseMapper;
+    private  final Authorization authorization;
 
     @Autowired
-    public CourseService(CourseRepository courseRepository, CourseToCourseResponseMapper courseToCourseResponseMapper) {
+    public CourseService(CourseRepository courseRepository, CourseToCourseResponseMapper courseToCourseResponseMapper, Authorization authorization) {
         this.courseRepository = courseRepository;
         this.courseToCourseResponseMapper = courseToCourseResponseMapper;
+        this.authorization = authorization;
     }
 
     public List<Course> getAllCourse() {
@@ -103,7 +106,7 @@ public class CourseService {
 
     public Course updateCourse(Course course) {
         Course courses = courseRepository.findById(course.getId()).get();
-        if (authorization(courses.getUserLogin())) {
+        if (authorization.authorization(courses.getUserLogin())) {
             return courseRepository.saveAndFlush(course);
         } else {
             throw new AccessException(ACCESS_IS_DENIED);
@@ -112,19 +115,15 @@ public class CourseService {
 
     @Transactional
     public void deleteCourseById(int id) {
-        if (authorization(getUserLogin(id))) {
+        if (authorization.authorization(getUser(id))) {
             courseRepository.deleteCourseById(id);
         } else {
             throw new AccessException(ACCESS_IS_DENIED);
         }
     }
 
-    private String getUserLogin(int id) {
+    private String getUser(int id) {
         return courseRepository.findById(id).get().getUserLogin();
     }
 
-    public boolean authorization(String login) {
-        return SecurityContextHolder.getContext()
-                .getAuthentication().getName().equals(login);
-    }
 }
