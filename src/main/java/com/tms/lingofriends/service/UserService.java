@@ -100,8 +100,7 @@ public class UserService {
     }
 
     public User updateUser(User user) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (login.equals(user)) {
+        if (authorization(user.getLogin())) {
             user.setChanged(new Timestamp(System.currentTimeMillis()));
             return userRepository.saveAndFlush(user);
         } else {
