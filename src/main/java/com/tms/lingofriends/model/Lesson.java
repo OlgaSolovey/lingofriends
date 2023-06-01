@@ -18,7 +18,6 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Entity
 @Table(name = "lesson_table")
-
 public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "lesson_id_seq_gen")

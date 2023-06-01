@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.validation.BindingResult;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ public class LessonServiceTest {
     private final List<Lesson> lessons = new ArrayList<>();
     private final List<LessonResponse> lessonResponses = new ArrayList<>();
     private final Timestamp time = new Timestamp(System.currentTimeMillis());
-
 
     @BeforeEach
     public void init() {

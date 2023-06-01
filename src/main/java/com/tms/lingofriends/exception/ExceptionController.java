@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.Timestamp;
@@ -25,6 +24,7 @@ public class ExceptionController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 new ExceptionMessage(HttpStatus.BAD_REQUEST, Timestamp.valueOf(LocalDateTime.now()), exception.getMessage()));
     }
+
     @ExceptionHandler(AccessException.class)
     public ResponseEntity<ExceptionMessage> AccessExceptionHandler(AccessException exception) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(

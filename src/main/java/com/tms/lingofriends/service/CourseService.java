@@ -8,7 +8,6 @@ import com.tms.lingofriends.model.response.CourseResponse;
 import com.tms.lingofriends.repository.CourseRepository;
 import com.tms.lingofriends.security.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,15 +16,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.tms.lingofriends.util.ExceptionMesseges.ACCESS_IS_DENIED;
-import static com.tms.lingofriends.util.ExceptionMesseges.COURSES_NOT_FOUND;
-import static com.tms.lingofriends.util.ExceptionMesseges.COURSE_NOT_FOUND;
+import static com.tms.lingofriends.util.ExceptionMessages.ACCESS_IS_DENIED;
+import static com.tms.lingofriends.util.ExceptionMessages.COURSES_NOT_FOUND;
+import static com.tms.lingofriends.util.ExceptionMessages.COURSE_NOT_FOUND;
 
 @Service
 public class CourseService {
     private final CourseRepository courseRepository;
     private final CourseToCourseResponseMapper courseToCourseResponseMapper;
-    private  final Authorization authorization;
+    private final Authorization authorization;
 
     @Autowired
     public CourseService(CourseRepository courseRepository, CourseToCourseResponseMapper courseToCourseResponseMapper, Authorization authorization) {
@@ -105,11 +104,15 @@ public class CourseService {
     }
 
     public Course updateCourse(Course course) {
-        Course courses = courseRepository.findById(course.getId()).get();
-        if (authorization.authorization(courses.getUserLogin())) {
-            return courseRepository.saveAndFlush(course);
+        Optional<Course> optionalCourse = courseRepository.findById(course.getId());
+        if (optionalCourse.isPresent()) {
+            if (authorization.authorization(optionalCourse.get().getUserLogin())) {
+                return courseRepository.saveAndFlush(course);
+            } else {
+                throw new AccessException(ACCESS_IS_DENIED);
+            }
         } else {
-            throw new AccessException(ACCESS_IS_DENIED);
+            throw new NotFoundException(COURSE_NOT_FOUND);
         }
     }
 
@@ -125,5 +128,4 @@ public class CourseService {
     private String getUser(int id) {
         return courseRepository.findById(id).get().getUserLogin();
     }
-
 }

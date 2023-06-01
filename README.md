@@ -20,8 +20,8 @@ Application use PostgreSQL database. For start the application you need Postgres
 * http://localhost:8080/user/res/{id} - GET method, show information about one user for users
 * http://localhost:8080/user/res/name/{name} - GET method, show information about one user by username for users
 * http://localhost:8080/user/res/ln/{languageName} - GET method, show information about one user by language name for users
-* http://localhost:8080/user/create - POST method, create user
-* http://localhost:8080/user/update - PUT method, update user
+* http://localhost:8080/user - POST method, create user
+* http://localhost:8080/user - PUT method, update user
 * http://localhost:8080/user/{id} - DELETE method, delete current user's account
 * http://localhost:8080/user/addcourse - POST method, add service to user's favourite
 * http://localhost:8080/user/getCourse/{userId} - GET method, show information about favorite courses for user
@@ -31,16 +31,16 @@ Application use PostgreSQL database. For start the application you need Postgres
 * http://localhost:8080/course/res/{id} - GET method, show information about one course for users
 * http://localhost:8080/course/res/ln/{languageName} - GET method, show information about one course by language name for users
 * http://localhost:8080/course/res/us/{userId} - GET method, show information about one course by username for users
-* http://localhost:8080/course/create - POST method, create course
-* http://localhost:8080/course/update - PUT method, update course
+* http://localhost:8080/course - POST method, create course
+* http://localhost:8080/course - PUT method, update course
 * http://localhost:8080/course/{id} - DELETE method, delete current course
 
 * http://localhost:8080/lesson/res/all - GET method, show all available lessons for users
 * http://localhost:8080/lesson/res/{id} - GET method, show information about one lesson for users
 * http://localhost:8080/lesson/res/cr/{courseId} - GET method, show information about one course by course id for users
 * http://localhost:8080/lesson/res/us/{userId} - GET method, show information about one lesson by username for users
-* http://localhost:8080/lesson/create - POST method, create course
-* http://localhost:8080/lesson/update - PUT method, update course
+* http://localhost:8080/lesson - POST method, create course
+* http://localhost:8080/lesson - PUT method, update course
 * http://localhost:8080/lesson/{id} - DELETE method, delete current course
 
 * http://localhost:8080/subscription/res/{id} - GET method, show information about one subscription for user
@@ -49,7 +49,7 @@ Application use PostgreSQL database. For start the application you need Postgres
 * http://localhost:8080/subscription - PUT method, update course
 * http://localhost:8080/subscription/{id} - DELETE method, delete current course
 
-## Available endpoints for users
+## Available endpoints for admin
 
 * http://localhost:8080/user/admin/all - GET method, show all available users for admin
 * http://localhost:8080/user/res/all - GET method, show all available users for users

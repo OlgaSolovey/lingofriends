@@ -18,7 +18,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "subscription_table")
-
 public class Subscription {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subscription_id_seq_gen")

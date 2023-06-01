@@ -20,7 +20,6 @@ import java.sql.Timestamp;
 @Table(name = "course_table")
 public class Course {
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_seq")
     @SequenceGenerator(name = "course_seq", sequenceName = "course_name_id_seq", allocationSize = 1)
     private Integer id;

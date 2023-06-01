@@ -18,8 +18,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Integer> {
 
     @Transactional
     @Modifying
-    @Query(
-            nativeQuery = true,
+    @Query(nativeQuery = true,
             value = "UPDATE lesson_table SET is_deleted= true WHERE id=:id")
     void deleteLessonById(int id);
 }

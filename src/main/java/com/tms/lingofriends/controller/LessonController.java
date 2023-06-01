@@ -1,6 +1,5 @@
 package com.tms.lingofriends.controller;
 
-import com.tms.lingofriends.mapper.LessonToLessonResponseMapper;
 import com.tms.lingofriends.model.Lesson;
 import com.tms.lingofriends.model.response.LessonResponse;
 import com.tms.lingofriends.service.LessonService;
@@ -19,17 +18,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/lesson")
 public class LessonController {
     private final LessonService lessonService;
-    private final LessonToLessonResponseMapper lessonToLessonResponseMapper;
 
     @Autowired
-    public LessonController(LessonService lessonService, LessonToLessonResponseMapper lessonToLessonResponseMapper) {
+    public LessonController(LessonService lessonService) {
         this.lessonService = lessonService;
-        this.lessonToLessonResponseMapper = lessonToLessonResponseMapper;
     }
 
     @Operation(summary = "Get information about all lessons for admin.")
@@ -83,13 +79,13 @@ public class LessonController {
         return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<HttpStatus> createLesson(@RequestBody Lesson lesson) {
         lessonService.createLesson(lesson);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
+    @PutMapping
     public void updateLesson(@RequestBody Lesson lesson) {
         lessonService.updateLesson(lesson);
     }

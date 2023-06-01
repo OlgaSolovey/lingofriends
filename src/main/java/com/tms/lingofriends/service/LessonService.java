@@ -16,9 +16,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.tms.lingofriends.util.ExceptionMesseges.ACCESS_IS_DENIED;
-import static com.tms.lingofriends.util.ExceptionMesseges.LESSON_NOT_FOUND;
-import static com.tms.lingofriends.util.ExceptionMesseges.LESSONS_NOT_FOUND;
+import static com.tms.lingofriends.util.ExceptionMessages.ACCESS_IS_DENIED;
+import static com.tms.lingofriends.util.ExceptionMessages.COURSE_NOT_FOUND;
+import static com.tms.lingofriends.util.ExceptionMessages.LESSON_NOT_FOUND;
+import static com.tms.lingofriends.util.ExceptionMessages.LESSONS_NOT_FOUND;
 
 @Service
 public class LessonService {
@@ -104,11 +105,15 @@ public class LessonService {
     }
 
     public Lesson updateLesson(Lesson lesson) {
-        lessonRepository.findById(lesson.getId()).get();
-        if (authorization.authorization(lesson.getUserLogin())) {
-            return lessonRepository.saveAndFlush(lesson);
+        Optional<Lesson> optionalLesson = lessonRepository.findById(lesson.getId());
+        if (optionalLesson.isPresent()) {
+            if (authorization.authorization(optionalLesson.get().getUserLogin())) {
+                return lessonRepository.saveAndFlush(lesson);
+            } else {
+                throw new AccessException(ACCESS_IS_DENIED);
+            }
         } else {
-            throw new AccessException(ACCESS_IS_DENIED);
+            throw new NotFoundException(COURSE_NOT_FOUND);
         }
     }
 

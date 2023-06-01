@@ -1,6 +1,6 @@
 package com.tms.lingofriends.util;
 
-public class ExceptionMesseges {
+public class ExceptionMessages {
     public final static String USERS_NOT_FOUND = "Users not found!";
     public final static String USER_NOT_FOUND = "User not found!";
     public final static String COURSES_NOT_FOUND = "Courses not found!";

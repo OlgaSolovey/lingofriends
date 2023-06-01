@@ -79,13 +79,13 @@ public class CourseController {
         return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<HttpStatus> createCourse(@RequestBody Course course) {
         courseService.createCourse(course);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
+    @PutMapping
     public void updateCourse(@RequestBody Course course) {
         courseService.updateCourse(course);
     }

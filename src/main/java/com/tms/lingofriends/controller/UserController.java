@@ -24,10 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-import static com.tms.lingofriends.util.ExceptionMesseges.BAD_PASSWORD;
-import static com.tms.lingofriends.util.ExceptionMesseges.NOT_CREATED;
-import static com.tms.lingofriends.util.ExceptionMesseges.NOT_UPDATE;
-
+import static com.tms.lingofriends.util.ExceptionMessages.BAD_PASSWORD;
+import static com.tms.lingofriends.util.ExceptionMessages.NOT_CREATED;
+import static com.tms.lingofriends.util.ExceptionMessages.NOT_UPDATE;
 
 @RestController
 @RequestMapping("/user")
@@ -82,7 +81,7 @@ public class UserController {
         return new ResponseEntity<>(list, (!list.isEmpty()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<User> createUser(@RequestBody @Valid User user, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             userService.createUser(user);
@@ -92,7 +91,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/update")
+    @PutMapping
     public ResponseEntity<HttpStatus> updateUser(@RequestBody @Valid User user, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             userService.updateUser(user);

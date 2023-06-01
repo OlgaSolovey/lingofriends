@@ -20,17 +20,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.tms.lingofriends.util.ExceptionMesseges.ACCESS_IS_DENIED;
-import static com.tms.lingofriends.util.ExceptionMesseges.BAD_PASSWORD;
-import static com.tms.lingofriends.util.ExceptionMesseges.USERS_NOT_FOUND;
-import static com.tms.lingofriends.util.ExceptionMesseges.USER_NOT_FOUND;
+import static com.tms.lingofriends.util.ExceptionMessages.ACCESS_IS_DENIED;
+import static com.tms.lingofriends.util.ExceptionMessages.BAD_PASSWORD;
+import static com.tms.lingofriends.util.ExceptionMessages.USERS_NOT_FOUND;
+import static com.tms.lingofriends.util.ExceptionMessages.USER_NOT_FOUND;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final UserToUserResponseMapper userToUserResponseMapper;
     private final PasswordEncoder passwordEncoder;
-    private  final Authorization authorization;
+    private final Authorization authorization;
 
 
     @Autowired

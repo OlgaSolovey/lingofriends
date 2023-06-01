@@ -9,7 +9,6 @@ import com.tms.lingofriends.repository.SubscriptionRepository;
 import com.tms.lingofriends.security.Authorization;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,16 +16,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.tms.lingofriends.util.ExceptionMesseges.ACCESS_IS_DENIED;
-import static com.tms.lingofriends.util.ExceptionMesseges.SUBSCRIPTION_NOT_FOUND;
-import static com.tms.lingofriends.util.ExceptionMesseges.SUBSCRIPTIONS_NOT_FOUND;
+import static com.tms.lingofriends.util.ExceptionMessages.ACCESS_IS_DENIED;
+import static com.tms.lingofriends.util.ExceptionMessages.COURSE_NOT_FOUND;
+import static com.tms.lingofriends.util.ExceptionMessages.SUBSCRIPTION_NOT_FOUND;
+import static com.tms.lingofriends.util.ExceptionMessages.SUBSCRIPTIONS_NOT_FOUND;
 
 
 @Service
 public class SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
     private final SubscriptionToSubscriptionResponseMapper subscriptionToSubscriptionResponseMapper;
-    private  final Authorization authorization;
+    private final Authorization authorization;
 
     @Autowired
     public SubscriptionService(SubscriptionRepository subscriptionRepository, SubscriptionToSubscriptionResponseMapper subscriptionToSubscriptionResponseMapper, Authorization authorization) {
@@ -74,11 +74,15 @@ public class SubscriptionService {
     }
 
     public Subscription updateSubscription(Subscription subscription) {
-        Subscription subscription1 = subscriptionRepository.findById(subscription.getId()).get();
-        if (authorization.authorization(subscription1.getUserLogin())) {
-            return subscriptionRepository.saveAndFlush(subscription);
+        Optional<Subscription> optionalSubscription = subscriptionRepository.findById(subscription.getId());
+        if (optionalSubscription.isPresent()) {
+            if (authorization.authorization(optionalSubscription.get().getUserLogin())) {
+                return subscriptionRepository.saveAndFlush(subscription);
+            } else {
+                throw new AccessException(ACCESS_IS_DENIED);
+            }
         } else {
-            throw new AccessException(ACCESS_IS_DENIED);
+            throw new NotFoundException(COURSE_NOT_FOUND);
         }
     }
 
